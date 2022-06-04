@@ -19,19 +19,19 @@ let board, turn, winner
 
 const squareEls = document.querySelectorAll(".squares")
 const messageEl = document.querySelector("#message")
+const resetBtn = document.querySelector('#reset-button')
 
 /*----------------------------- Event Listeners -----------------------------*/
 
-squareEls.forEach(function(square) {
-  square.addEventListener('click', handleClick)
-})
+document.querySelector('.board').addEventListener('click', handleClick)
+resetBtn.addEventListener('click', init)
 
 /*-------------------------------- Functions --------------------------------*/
 
 init()
 
 function init() {
-  board = [1, null, null, null, null, null, null, null, null]
+  board = [null, null, null, null, null, null, null, null, null]
   turn = 1 
   winner = null
   render()
@@ -43,29 +43,57 @@ if (square === 1) {
   squareEls[index].textContent = 'X'
 } else if (square === -1) {
   squareEls[index].textContent = 'O'
-} 
-  })
-
-  if(winner === null){
-   messageEl.textContent = `Keep going!! It's ${''}'s turn`
-} else if (winner === 'T') {
-  messageEl.textContent = `It's a tie`
-} else {
-  messageEl.textContent = `Congratulations!! Player ${winner} wins!!`
-}
-}
-
-function handleClick(evt){
-  const sqIdx = parseInt(evt.target.id.slice(2))
-  console.log(sqIdx)
-  if (board[sqIdx] !== null){
-    messageEl.textContent = 'This square has been taken! Choose a different one!'
-  } else if (winner !== null){
-    messageEl.textContent = 'Game Over! Go again!'
-  } else { 
-    board[sqIdx] = turn
-    turn *= -1
-    getWinner()
-    render()
+} else if (square === null){
+  squareEls[index].textContent = ''
   }
+})
+
+if(winner === null) {
+  if (turn === 1) {
+    messageEl.textContent = "It is player X's turn"
+  } else if (turn === -1) {
+    messageEl.textContent = "It is player O's turn"
+  }
+} else if (winner === 'T') {
+  messageEl.textContent = "It's a tie! Go again"
+} else {
+  messageEl.textContent = `Congratulations! Player ${winner} wins!!`
 }
+}
+
+
+
+function handleClick(evt) {
+  let sqIdx = parseInt(evt.target.id.replace('sq', ''))
+  if (board[sqIdx] !== null) {
+    return
+  } else if (winner !== null) {
+    return
+  } else {
+    board[sqIdx] = turn
+  }
+  turn *= -1
+  getWinner()
+  render()
+}
+
+function getWinner() {
+  let sum
+  for (let i = 0; i < winningCombos.length; i++){
+    sum = board[winningCombos[i][0]] + board[winningCombos[i][1]] + board[winningCombos[i][2]] 
+    if (sum === 3){
+      winner = 1
+      return
+    } else if (sum === -3){
+      winner = -1
+      return
+    } else if (board.includes(null) === false){
+    winner =  'T'
+    return
+    } else {
+    winner = null
+    }
+    
+    
+  } 
+} 
