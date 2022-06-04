@@ -82,10 +82,10 @@ function getWinner() {
   for (let i = 0; i < winningCombos.length; i++){
     sum = board[winningCombos[i][0]] + board[winningCombos[i][1]] + board[winningCombos[i][2]] 
     if (sum === 3){
-      winner = 1
+      winner = 'X'
       return
     } else if (sum === -3){
-      winner = -1
+      winner = 'O'
       return
     } else if (board.includes(null) === false){
     winner =  'T'
